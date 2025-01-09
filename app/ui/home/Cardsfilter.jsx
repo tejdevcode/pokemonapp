@@ -21,11 +21,16 @@ const Cardsfilter = () => {
       /* console.log(typenum) */
       let poketypedata = { "results": [] };
       try {
-         const pokemondata = await poketype(typenum);
-         pokemondata.map(item =>
-            poketypedata.results.push(item.pokemon)
-         );
-         setPokemon(poketypedata)
+         if (typenum > 0) {
+            const pokemondata = await poketype(typenum);
+            pokemondata.map(item =>
+               poketypedata.results.push(item.pokemon)
+            );
+            setPokemon(poketypedata)
+         } else {
+            const pokemondata = await pokelist();
+            setPokemon(pokemondata)
+         }
       } catch (error) {
          console.error('Error fetching data:', error);
       }

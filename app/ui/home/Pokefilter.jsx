@@ -17,6 +17,7 @@ const Pokefilter = ({ onTypechange, onTypesearch }) => {
    const [pokemonName, setPokemonName] = useState('');
    const [pokemonData, setPokemonData] = useState(null);
    const [error, setError] = useState(null);
+   const [errorsrchonly, setErrorsrchonly] = useState("");
    const router = useRouter();
 
    const searchParams = useSearchParams()
@@ -39,12 +40,27 @@ const Pokefilter = ({ onTypechange, onTypesearch }) => {
    const handleTypeChange = async (e) => {
       if (e.target.value > 0) {
          router.push(`/?type=${e.target.value}`)
+
          setSelectedType(e.target.value);
          onTypechange(e.target.value);
          setQuery('')
+      } else {
+         setSelectedType(0);
+         onTypechange(e.target.value);
+         router.push(`/?type=${e.target.value}`);
       };
+      if (e.target.value === 0) {
+         //router.replace(`/`)
+         const url = new URL(window.location.href);
+         const typeParam = url.searchParams.get('type');
+         if (typeParam) {
+            url.searchParams.delete('type');
+            router.replace(url.pathname + url.search);
+         }
+         console.log(querytypenum)
+      }
       setPokemonName(''); // Clear previous search
-
+      setErrorsrchonly('');
       let progressInterval = 0;
       const interval = setInterval(() => {
          if (progressInterval < 90) {
@@ -61,38 +77,42 @@ const Pokefilter = ({ onTypechange, onTypesearch }) => {
       e.preventDefault();
       setError(null);
       setPokemonData(null);
+      if (querytypenum === null || querytypenum === undefined) {
+         setErrorsrchonly('Please Select Pokemon Type First');
+      }
+      if (querytypenum) {
+         let progressInterval = 0;
+         const interval = setInterval(() => {
+            if (progressInterval < 90) {
+               progressInterval += 1;
+               setProgress(progressInterval);
+            }
+         }, 100);
+         setLoading(true);
 
-      let progressInterval = 0;
-      const interval = setInterval(() => {
-         if (progressInterval < 90) {
-            progressInterval += 1;
-            setProgress(progressInterval);
+         const formData = new FormData();
+         formData.set('type', selectedType);
+         formData.set('query', query);
+
+         let queryParams = new URLSearchParams();
+
+         if (selectedType) queryParams.append('type', selectedType);
+         if (query) queryParams.append('query', query);
+
+         // Use router.push to update the URL with query parameters
+         if (!selectedType && !query) queryParams = new URLSearchParams();
+         router.push(`/?${queryParams.toString()}`);
+
+         try {
+            const pokmondata = await pokefilteraction(formData);
+            onTypesearch(pokmondata)
+         } catch (err) {
+            setError('Error fetching Pokémon');
+         } finally {
+            setProgress(100);
+            clearInterval(interval);
+            setLoading(false);
          }
-      }, 100);
-      setLoading(true);
-
-      const formData = new FormData();
-      formData.set('type', selectedType);
-      formData.set('query', query);
-
-      let queryParams = new URLSearchParams();
-
-      if (selectedType) queryParams.append('type', selectedType);
-      if (query) queryParams.append('query', query);
-
-      // Use router.push to update the URL with query parameters
-      if (!selectedType && !query) queryParams = new URLSearchParams();
-      router.push(`/?${queryParams.toString()}`);
-
-      try {
-         const pokmondata = await pokefilteraction(formData);
-         onTypesearch(pokmondata)
-      } catch (err) {
-         setError('Error fetching Pokémon');
-      } finally {
-         setProgress(100);
-         clearInterval(interval);
-         setLoading(false);
       }
    };
 
@@ -119,12 +139,15 @@ const Pokefilter = ({ onTypechange, onTypesearch }) => {
             {loading && <div style={{ width: '100%', background: '#ddd', height: '6px' }} className="bg-green-400  relative">
                <div style={{ width: `${progress}%`, height: '100%' }} className="h-[18px] text-center text-[8px] bg-green-400 "></div>
             </div>}
+
+
             {/* <div className="pokename">
                <label htmlFor=""></label>
             </div> */}
             <button type="submit"
                className="absolute top-0 right-0 bg-cyan-900 text-white px-4 py-3 hover:bg-black transition-all">Search</button>
          </div>
+         {errorsrchonly && <div className="srcherror text-red-700 capitalize mt-3 bg-red-200 border border-red-500 px-1 rounded-[4px] w-full md:w-96">{errorsrchonly}</div>}
       </form >
    )
 }
