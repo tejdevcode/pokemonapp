@@ -2,7 +2,10 @@ import { Geist, Geist_Mono, Varela_Round } from "next/font/google";
 import "./globals.css";
 import { Metadata } from 'next';
 
-
+const varelaRound = Varela_Round({
+  weight: '400',
+  subsets: ['latin'],
+})
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,12 +32,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-        <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet" />
-      </head>
+    <html lang="en" className={varelaRound.className}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} >
         {children}
       </body>
