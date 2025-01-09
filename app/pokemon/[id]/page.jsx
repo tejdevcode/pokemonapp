@@ -21,7 +21,7 @@ const Page = async ({ params }) => {
             <div className="card bg-emerald-300 mx-auto max-w-96">
                <figure className="w-full flex flex-wrap items-center justify-center min-h-52 mb-9 p-1">
                   <Suspense fallback={'loading...'}>
-                     <Image src={pokeimg} alt={pokemon.name} title={pokemon.name} width={384} height={384} />
+                     <Image src={pokeimg} alt={pokemon.name} title={pokemon.name} width={300} height={300} />
                   </Suspense>
                </figure>
                <div className="pokeinfo p-5 bg-orange-300">
