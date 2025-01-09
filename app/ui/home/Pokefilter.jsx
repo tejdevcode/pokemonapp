@@ -57,7 +57,7 @@ const Pokefilter = ({ onTypechange, onTypesearch }) => {
             url.searchParams.delete('type');
             router.replace(url.pathname + url.search);
          }
-         console.log(querytypenum)
+         /* console.log(querytypenum) */
       }
       setPokemonName(''); // Clear previous search
       setErrorsrchonly('');

@@ -26,7 +26,7 @@ const Cardsfilter = () => {
             pokemondata?.map(item =>
                poketypedata?.results?.push(item.pokemon)
             );
-            console.log(poketypedata)
+            /* console.log(poketypedata) */
             setPokemon(poketypedata)
          } else {
             const pokemondata = await pokelist();
