@@ -6,8 +6,6 @@ import Card from "./Card"
 import { useEffect, useState } from "react"
 import { poketype } from "@/app/lib/actions"
 import { pokefilteractionurl } from "@/app/lib/actions"
-import { CardSkeleton } from "@/app/skeleton/cardskeleton"
-import { Suspense } from "react"
 import { useSearchParams } from 'next/navigation'
 import Nodata from "./Nodata"
 
@@ -17,6 +15,7 @@ const Cardsfilter = () => {
    const queryname = searchParams.get('query');
 
    const [pokemon, setPokemon] = useState();
+   const [showNoData, setShowNoData] = useState(false);
    /* console.log(pokemon) */
    const handleTypechange = async (typenum) => {
       /* console.log(typenum) */
@@ -69,6 +68,14 @@ const Cardsfilter = () => {
          }
       })();
    }, [])
+
+   useEffect(() => {
+      const timer = setTimeout(() => {
+         setShowNoData(true);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+   }, []);
    return (
       <>
          {/* selection of type and search component */}
@@ -79,7 +86,8 @@ const Cardsfilter = () => {
                pokemon?.results?.map((item, i) =>
                   <Card key={i} data={item} />
                ) :
-               <Nodata />
+               showNoData ? <Nodata /> : <p>Loading...</p>
+
             }
          </div>
       </>
