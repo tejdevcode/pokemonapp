@@ -32,5 +32,5 @@ export async function pokefilteractionurl(querytypenum, queryname) {
 export async function poketype(type) {
    const typeResponce = await fetchdata(`https://pokeapi.co/api/v2/type/${type}`);
 
-   return typeResponce.pokemon.slice(0, 36);
+   return typeResponce?.pokemon?.slice(0, 36);
 }

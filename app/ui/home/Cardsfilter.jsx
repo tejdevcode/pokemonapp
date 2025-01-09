@@ -9,6 +9,7 @@ import { pokefilteractionurl } from "@/app/lib/actions"
 import { CardSkeleton } from "@/app/skeleton/cardskeleton"
 import { Suspense } from "react"
 import { useSearchParams } from 'next/navigation'
+import Nodata from "./Nodata"
 
 const Cardsfilter = () => {
    const searchParams = useSearchParams()
@@ -23,9 +24,10 @@ const Cardsfilter = () => {
       try {
          if (typenum > 0) {
             const pokemondata = await poketype(typenum);
-            pokemondata.map(item =>
-               poketypedata.results.push(item.pokemon)
+            pokemondata?.map(item =>
+               poketypedata?.results?.push(item.pokemon)
             );
+            console.log(poketypedata)
             setPokemon(poketypedata)
          } else {
             const pokemondata = await pokelist();
@@ -33,6 +35,7 @@ const Cardsfilter = () => {
          }
       } catch (error) {
          console.error('Error fetching data:', error);
+         setPokemon(null)
       }
    }
    const handleTypesearch = async (typesrch) => {
@@ -42,7 +45,7 @@ const Cardsfilter = () => {
    useEffect(() => {
       (async () => {
          try {
-            if (querytypenum > 0) {
+            if (querytypenum > 0 && querytypenum < 20) {
                if (querytypenum !== 0 && queryname && queryname !== "") {
                   const pokemondata = await pokefilteractionurl(querytypenum, queryname);
                   let poketypedata = { "results": pokemondata };
@@ -52,7 +55,7 @@ const Cardsfilter = () => {
                   let poketypedata = { "results": [] };
                   const pokemondata = await poketype(querytypenum);
                   pokemondata.map(item =>
-                     poketypedata.results.push(item.pokemon)
+                     poketypedata?.results?.push(item.pokemon)
                   );
                   setPokemon(poketypedata)
                }
@@ -62,6 +65,7 @@ const Cardsfilter = () => {
             }
          } catch (error) {
             console.error('Error fetching data:', error);
+            setPokemon(null);
          }
       })();
    }, [])
@@ -71,9 +75,12 @@ const Cardsfilter = () => {
          <Pokefilter onTypechange={handleTypechange} onTypesearch={handleTypesearch} />
          <div className="pokecard grid gap-5 auto-fill-[252px]">
             {/* cards component */}
-            {pokemon?.results?.map((item, i) =>
-               <Card key={i} data={item} />
-            )}
+            {pokemon ?
+               pokemon?.results?.map((item, i) =>
+                  <Card key={i} data={item} />
+               ) :
+               <Nodata />
+            }
          </div>
       </>
    )
