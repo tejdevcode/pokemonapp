@@ -17,11 +17,11 @@ const Page = async ({ params }) => {
             <Link href={"/"} className="m-3 "><strong className="capitalize"> Home <FaAngleRight className="inline-block mb-1" />
             </strong></Link> <strong className="capitalize  tracking-wide">{pokemon.name}</strong>
          </div>
-         <div className="pokedetial  flex flex-wrap items-center justify-center ">
+         <div className="pokedetial  flex flex-wrap items-center justify-center min-h-[80vh]">
             <div className="card bg-emerald-300 mx-auto max-w-96">
-               <figure className="w-full flex flex-wrap items-center justify-center min-h-52 mb-9">
+               <figure className="w-full flex flex-wrap items-center justify-center min-h-52 mb-9 p-1">
                   <Suspense fallback={'loading...'}>
-                     <Image src={pokeimg} alt={pokemon.name} title={pokemon.name} width={200} height={200} />
+                     <Image src={pokeimg} alt={pokemon.name} title={pokemon.name} width={384} height={384} />
                   </Suspense>
                </figure>
                <div className="pokeinfo p-5 bg-orange-300">
