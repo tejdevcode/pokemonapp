@@ -24,8 +24,8 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: {
-    template: 'Pokemon App by Tej R',
-    default: 'Pokemon App by Tej R'
+    template: 'Pokemon App by Janardan B',
+    default: 'Pokemon App by Janardan B'
   },
   description: 'Peokemon search and information App '
 }
